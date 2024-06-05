@@ -24,12 +24,7 @@ export default {
   methods: {
     getUserInfo() {
       console.log(this.telegram);
-      console.log(this.telegram.initDataUnsafe);
-      // this.telegram.Web.getUser().then(user => {
-      //   this.userInfo = user;
-      // }).catch(error => {
-      //   console.error('Failed to get user info:', error);
-      // });
+      this.userInfo = this.telegram.initDataUnsafe.user;
     }
   }
 }
