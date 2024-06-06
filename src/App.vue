@@ -2,17 +2,23 @@
   <img alt="Vue logo" src="./assets/logo.png">
   <TonBalance />
   <TelegramUserInfo />
+  <BuyTest />
+  <TonConnect />
 </template>
 
 <script>
 import TonBalance from './components/TonBalance.vue';
 import TelegramUserInfo from "@/components/TelegramUserInfo.vue";
+import BuyTest from "@/components/BuyTest.vue";
+import TonConnect from "@/components/TonConnect.vue";
 
 export default {
   name: 'App',
   components: {
     TelegramUserInfo,
-    TonBalance
+    TonBalance,
+    BuyTest,
+    TonConnect,
   },
 }
 </script>
