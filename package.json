@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tonconnect/ui": "^2.0.3",
+    "axios": "^1.7.2",
     "bip39": "^3.1.0",
     "buffer": "^6.0.3",
     "core-js": "^3.8.3",

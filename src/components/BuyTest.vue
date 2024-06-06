@@ -18,15 +18,14 @@
 <script>
 import QRCode from 'qrcode';
 import TonWeb from 'tonweb';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   name: "BuyTest",
   data() {
     return {
-      tests: [
-        { id: 1, name: 'First test', price: 1 },
-        { id: 2, name: 'Second test', price: 2 },
-      ],
+      tests: [],
       loading: false,
       success: false,
       error: null,
@@ -35,18 +34,34 @@ export default {
       testQrCode: '',
     };
   },
+  created() {
+    this.fetchTests();
+  },
   methods: {
+    async fetchTests() {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/packages`);
+        this.tests = response.data;
+      } catch (error) {
+        console.error('Error fetching tests:', error);
+      }
+    },
     async buyTest(test) {
       this.loading = true;
       this.error = null;
       this.success = false;
       try {
-        // const tonweb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
-        // const amountInNano = test.price.toString();
+
+        const response = await axios.post(`${API_BASE_URL}/api/orders`, {
+          packageId: test.id,
+          telegramUserId: 621085735,
+        });
+
+        const order = response.data;
+
         const toNano = TonWeb.utils.toNano;
         const amountInNano = toNano(test.price.toString());
-        // console.log(tonweb);
-        const paymentLink = `https://app.tonkeeper.com/transfer/${this.recipientAddress}?text=123&amount=${amountInNano}`;
+        const paymentLink = `https://app.tonkeeper.com/transfer/${this.recipientAddress}?text=Order%20ID%20${order.uid}&amount=${amountInNano}`;
 
         this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
