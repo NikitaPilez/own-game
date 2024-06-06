@@ -3,14 +3,14 @@
   <TonBalance />
   <TelegramUserInfo />
   <BuyTest />
-  <TonConnect />
+<!--  <TonConnect />-->
 </template>
 
 <script>
 import TonBalance from './components/TonBalance.vue';
 import TelegramUserInfo from "@/components/TelegramUserInfo.vue";
 import BuyTest from "@/components/BuyTest.vue";
-import TonConnect from "@/components/TonConnect.vue";
+// import TonConnect from "@/components/TonConnect.vue";
 
 export default {
   name: 'App',
@@ -18,7 +18,7 @@ export default {
     TelegramUserInfo,
     TonBalance,
     BuyTest,
-    TonConnect,
+    // TonConnect,
   },
 }
 </script>

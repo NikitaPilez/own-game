@@ -24,13 +24,13 @@ export default {
   data() {
     return {
       tests: [
-        { id: 1, name: 'First test', price: 100 },
-        { id: 2, name: 'Second test', price: 200 },
+        { id: 1, name: 'First test', price: 1 },
+        { id: 2, name: 'Second test', price: 2 },
       ],
       loading: false,
       success: false,
       error: null,
-      recipientAddress: 'EQDtFpEwcFAEcRe5mLVh2N6C0x-_hJEM7W61_JLnSF74p4q2',
+      recipientAddress: '0QDD5-7iLDPvJ_T_LKwlkXfyexl2iL7v9-BH-_a3vJ25Vjf0',
       selectedTest: null,
       testQrCode: '',
     };
@@ -41,11 +41,12 @@ export default {
       this.error = null;
       this.success = false;
       try {
-        const tonweb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
+        // const tonweb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
         // const amountInNano = test.price.toString();
-        console.log(tonweb);
-        // const paymentLink = `ton://transfer/${this.recipientAddress}?amount=${amountInNano}&text=PaymentForTest`;
-        const paymentLink = `ton://transfer/EQDtFpEwcFAEcRe5mLVh2N6C0x-_hJEM7W61_JLnSF74p4q2?amount=500000000&text=123`;
+        const toNano = TonWeb.utils.toNano;
+        const amountInNano = toNano(test.price.toString());
+        // console.log(tonweb);
+        const paymentLink = `https://app.tonkeeper.com/transfer/${this.recipientAddress}?text=123&amount=${amountInNano}`;
 
         this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
