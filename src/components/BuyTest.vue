@@ -68,7 +68,6 @@ export default {
         }
       }).then(response => {
         this.userTests = response.data;
-        this.checkForPendingOrders();
       }).catch(error => {
         console.error(error);
       });
@@ -131,6 +130,8 @@ export default {
 
         this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
+
+        this.checkForPendingOrders();
 
         window.open(paymentLink, '_blank');
       } catch (error) {
