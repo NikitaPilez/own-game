@@ -1,8 +1,9 @@
-import TonConnect from '@tonconnect/ui';
+import TonConnect from '@tonconnect/sdk';
 
-const TonConnectUI = new TonConnect.TonConnectUI({
+const connector = new TonConnect({
     manifestUrl: 'https://frontend.nmikser.xyz/tonconnect-manifest.json',
-    buttonRootId: 'ton-connect'
 });
 
-export { TonConnectUI };
+// connector.restoreConnection();
+
+export { connector };
