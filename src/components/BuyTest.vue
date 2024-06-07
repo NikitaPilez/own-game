@@ -11,7 +11,7 @@
         >
           {{ getButtonLabel(test) }}
         </button>
-        <div v-if="selectedTest && selectedTest.id === test.id">
+        <div v-if="selectedTest && selectedTest.id === test.id && isMobile()">
           <img :src="testQrCode" alt="QR Code">
         </div>
       </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-// import QRCode from 'qrcode';
+import QRCode from 'qrcode';
 import TonWeb from 'tonweb';
 import axios from 'axios';
 import { API_BASE_URL, TELEGRAM_ID, RECIPIENT_ADDRESS } from '@/config';
@@ -45,6 +45,9 @@ export default {
     this.fetchUserTests();
   },
   methods: {
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    },
     getTelegramUserId() {
       const tg = inject('telegram');
 
@@ -122,7 +125,7 @@ export default {
         const amountInNano = toNano(test.price.toString());
         const paymentLink = `https://app.tonkeeper.com/transfer/${this.recipientAddress}?text=Order%20ID%20${order.uid}&amount=${amountInNano}`;
 
-        // this.testQrCode = await QRCode.toDataURL(paymentLink);
+        this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
 
         this.interval = setInterval(this.fetchUserTests, 3000);
