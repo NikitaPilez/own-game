@@ -11,7 +11,7 @@
         >
           {{ getButtonLabel(test) }}
         </button>
-        <div v-if="selectedTest && selectedTest.id === test.id && isMobile()">
+        <div v-if="selectedTest && selectedTest.id === test.id && !isMobile()">
           <img :src="testQrCode" alt="QR Code">
         </div>
       </div>
