@@ -72,12 +72,6 @@ export default {
         console.error(error);
       });
     },
-    checkForPendingOrders() {
-      const hasPendingOrders = this.userTests.some(order => order.status === 'created');
-      if (hasPendingOrders && !this.interval) {
-        this.interval = setInterval(this.fetchUserTests, 3000);
-      }
-    },
     getOrderStatus(testId) {
       const order = this.userTests.find(order => order.package_id === testId);
       return order ? order.status : null;
@@ -131,7 +125,7 @@ export default {
         this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
 
-        this.checkForPendingOrders();
+        this.interval = setInterval(this.fetchUserTests, 3000);
 
         window.open(paymentLink, '_blank');
       } catch (error) {
