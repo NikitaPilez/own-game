@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import QRCode from 'qrcode';
+// import QRCode from 'qrcode';
 import TonWeb from 'tonweb';
 import axios from 'axios';
 import { API_BASE_URL, TELEGRAM_ID, RECIPIENT_ADDRESS } from '@/config';
@@ -101,7 +101,7 @@ export default {
       if (status === 'success') {
         this.playTest(test);
       } else if (status === 'created') {
-        // Status created action
+        this.buyTest(test);
       } else {
         this.buyTest(test);
       }
@@ -122,7 +122,7 @@ export default {
         const amountInNano = toNano(test.price.toString());
         const paymentLink = `https://app.tonkeeper.com/transfer/${this.recipientAddress}?text=Order%20ID%20${order.uid}&amount=${amountInNano}`;
 
-        this.testQrCode = await QRCode.toDataURL(paymentLink);
+        // this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
 
         this.interval = setInterval(this.fetchUserTests, 3000);
