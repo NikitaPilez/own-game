@@ -6,10 +6,10 @@
         <h2>{{ test.title }}</h2>
         <p>Price: {{ test.price }} USDT</p>
         <button
-            :class="test.is_active ? 'btn-green' : 'btn-blue'"
-            @click="test.is_active ? playTest(test) : buyTest(test)"
+            :class="getButtonClass(test)"
+            @click="getButtonAction(test)"
         >
-          {{ test.is_active ? 'Play' : 'Buy' }}
+          {{ getButtonLabel(test) }}
         </button>
         <div v-if="selectedTest && selectedTest.id === test.id">
           <img :src="testQrCode" alt="QR Code">
@@ -31,6 +31,7 @@ export default {
   data() {
     return {
       tests: [],
+      userTests: [],
       recipientAddress: RECIPIENT_ADDRESS,
       selectedTest: null,
       testQrCode: '',
@@ -41,7 +42,7 @@ export default {
   mounted() {
     this.getTelegramUserId();
     this.fetchTests();
-    this.interval = setInterval(this.fetchTests, 3000);
+    this.fetchUserTests();
   },
   methods: {
     getTelegramUserId() {
@@ -54,15 +55,63 @@ export default {
       }
     },
     fetchTests() {
-      axios.get(`${API_BASE_URL}/api/packages`, {
-        params: {
-          telegramUserId: this.telegramUserId,
-        }
-      }).then(response => {
+      axios.get(`${API_BASE_URL}/api/packages`).then(response => {
         this.tests = response.data;
       }).catch(error => {
         console.error(error);
       });
+    },
+    fetchUserTests() {
+      axios.get(`${API_BASE_URL}/api/userPackages`, {
+        params: {
+          telegramUserId: this.telegramUserId,
+        }
+      }).then(response => {
+        this.userTests = response.data;
+        this.checkForPendingOrders();
+      }).catch(error => {
+        console.error(error);
+      });
+    },
+    checkForPendingOrders() {
+      const hasPendingOrders = this.userTests.some(order => order.status === 'created');
+      if (hasPendingOrders && !this.interval) {
+        this.interval = setInterval(this.fetchUserTests, 3000);
+      }
+    },
+    getOrderStatus(testId) {
+      const order = this.userTests.find(order => order.package_id === testId);
+      return order ? order.status : null;
+    },
+    getButtonClass(test) {
+      const status = this.getOrderStatus(test.id);
+      if (status === 'success') {
+        return 'btn-green';
+      } else if (status === 'created') {
+        return 'btn-wait';
+      } else {
+        return 'btn-blue';
+      }
+    },
+    getButtonLabel(test) {
+      const status = this.getOrderStatus(test.id);
+      if (status === 'success') {
+        return 'Play';
+      } else if (status === 'created') {
+        return 'Wait';
+      } else {
+        return 'Buy';
+      }
+    },
+    getButtonAction(test) {
+      const status = this.getOrderStatus(test.id);
+      if (status === 'success') {
+        this.playTest(test);
+      } else if (status === 'created') {
+        // Status created action
+      } else {
+        this.buyTest(test);
+      }
     },
     async playTest(test) {
       console.log(test);
@@ -114,6 +163,11 @@ export default {
 
 .btn-green {
   background-color: green;
+  color: white;
+}
+
+.btn-wait {
+  background-color: orange;
   color: white;
 }
 </style>
