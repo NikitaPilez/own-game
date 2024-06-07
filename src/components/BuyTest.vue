@@ -82,6 +82,8 @@ export default {
 
         this.testQrCode = await QRCode.toDataURL(paymentLink);
         this.selectedTest = test;
+
+        window.open(paymentLink, '_blank');
       } catch (error) {
         console.log(error.message);
       }
