@@ -3,12 +3,12 @@
     <h1>Ton Connect Demo</h1>
     <div v-if="isAuthenticated">
       <p>Ваш кошелек в TonKeeper ${this.walletAddress} успешно авторизован!</p>
-      <button @click="disconnectWallet">Disconnect Wallet</button>
       <button @click="sendTransaction">Send 0.1 TON</button>
     </div>
     <div v-if="!isAuthenticated">
       <button @click="connectWallet">Connect Wallet</button>
     </div>
+    <button @click="disconnectWallet">Disconnect Wallet</button>
   </div>
 </template>
 
