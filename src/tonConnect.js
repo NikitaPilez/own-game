@@ -1,9 +1,7 @@
 import TonConnect from '@tonconnect/sdk';
 
-const connector = new TonConnect({
-    manifestUrl: 'https://frontend.nmikser.xyz/tonconnect-manifest.json',
-});
+const connector = new TonConnect();
 
-// connector.restoreConnection();
+connector.restoreConnection();
 
 export { connector };
