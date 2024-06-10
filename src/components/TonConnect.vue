@@ -2,32 +2,47 @@
   <div>
     <h1>Ton Connect Demo</h1>
     <div v-if="isAuthenticated">
-      <p>Вы успешно авторизованы через TON Keeper!</p>
+      <p>Ваш кошелек в TonKeeper ${this.walletAddress} успешно авторизован!</p>
+      <button @click="disconnectWallet">Disconnect Wallet</button>
+      <button @click="sendTransaction">Send 0.1 TON</button>
     </div>
-    <button @click="connectWallet">Connect Wallet</button>
-    <button @click="checkConnection">Check connection</button>
-    <button @click="sendTransaction">Send 0.1 TON</button>
+    <div v-if="!isAuthenticated">
+      <button @click="connectWallet">Connect Wallet</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { connector } from '@/tonConnect';
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
 
 export default {
   name: 'TonConnect',
   data() {
     return {
-      isAuthenticated: false
+      isAuthenticated: false,
+      walletAddress: null,
     };
+  },
+  mounted() {
+    this.checkConnection();
   },
   methods: {
     checkConnection() {
-      console.log(connector.connected);
+        if (connector.connected) {
+          this.isAuthenticated = true;
+          let walletAddress = toUserFriendlyAddress(connector.wallet.account.address, true);
+          this.walletAddress = walletAddress;
+          console.log('Successfully connected', walletAddress);
+        } else {
+          this.isAuthenticated = false;
+        }
+    },
+    async disconnectWallet() {
+      await connector.disconnect();
+      this.isAuthenticated = false;
     },
     async sendTransaction() {
-      if (!connector.connected) {
-        alert('Please connect wallet to send the transaction!');
-      }
 
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
@@ -35,12 +50,12 @@ export default {
           {
             address: "EQBBJBB3HagsujBqVfqeDUPJ0kXjgTPLWPFFffuNXNiJL0aA",
             amount: "20000000",
-            // stateInit: "base64bocblahblahblah==" // just for instance. Replace with your transaction initState or remove
+            stateInit: "base64bocblahblahblah==" // just for instance. Replace with your transaction initState or remove
           },
           {
             address: "EQDmnxDMhId6v1Ofg_h5KR5coWlFG6e86Ro3pc7Tq4CA0-Jn",
             amount: "60000000",
-            // payload: "base64bocblahblahblah==" // just for instance. Replace with your transaction payload or remove
+            payload: "base64bocblahblahblah==" // just for instance. Replace with your transaction payload or remove
           }
         ]
       }
@@ -61,9 +76,6 @@ export default {
       }
     },
     async connectWallet() {
-
-      console.log(connector.connected);
-
 
       try {
         // const walletList = await connector.getWallets();
