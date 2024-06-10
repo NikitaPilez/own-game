@@ -36,11 +36,13 @@ export default {
           console.log('Successfully connected', walletAddress);
         } else {
           this.isAuthenticated = false;
+          console.log('Not connected');
         }
     },
     async disconnectWallet() {
       await connector.disconnect();
       this.isAuthenticated = false;
+      console.log('Disconnected');
     },
     async sendTransaction() {
 
@@ -50,12 +52,12 @@ export default {
           {
             address: "EQBBJBB3HagsujBqVfqeDUPJ0kXjgTPLWPFFffuNXNiJL0aA",
             amount: "20000000",
-            stateInit: "base64bocblahblahblah==" // just for instance. Replace with your transaction initState or remove
+            // stateInit: "base64bocblahblahblah==" // just for instance. Replace with your transaction initState or remove
           },
           {
             address: "EQDmnxDMhId6v1Ofg_h5KR5coWlFG6e86Ro3pc7Tq4CA0-Jn",
             amount: "60000000",
-            payload: "base64bocblahblahblah==" // just for instance. Replace with your transaction payload or remove
+            // payload: "base64bocblahblahblah==" // just for instance. Replace with your transaction payload or remove
           }
         ]
       }
